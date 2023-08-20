@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>    
+        function get_url(id) {
+            return "https://api.themoviedb.org/3/movie/"+id+"?api_key=54eb7099be5f1c47fa34c50df79203d1&language=en-US";
+        }
+
+        
+        function add_movie(mov) {
+            $.getJSON(get_url(mov[0]), function(m) {
+                recs = document.getElementById("recommendation");
+                image_url = 'http://image.tmdb.org/t/p/w500/' + m.poster_path;
+                console.log("ok2");
+                rec_div = document.createElement('div');
+                rec_div.setAttribute("style","display:inline-block;width:19rem;margin:10px;padding:5px;")
+                rec_div.setAttribute("class", "image-responsive image-card")
+
+                a = document.createElement('a');
+                a.setAttribute('href', '' + mov[0]);
+
+                img = document.createElement('img')
+                img.setAttribute('src', image_url)
+                img.setAttribute('class',"card-img-top")
+                img.setAttribute('title', mov.title)
+
+                title = document.createElement('div');
+                title.setAttribute("class","card-title")
+
+                span = document.createElement("span");
+                if(mov[1]>=85)
+                {
+                    span.setAttribute("class","badge badge-pill badge-success");
+                }
+                else if (mov[1]>=70){
+                    span.setAttribute("class","badge badge-pill badge-warning");
+                } 
+                else 
+                {
+                    span.setAttribute("class","badge badge-pill badge-danger");
+                }
+                span.setAttribute("style","float:right;padding:8px; font-size:15px;");
+                span.innerHTML = mov[1] + "%";
+                
+
+                title.innerHTML = m.title;
+                title.appendChild(span);
+                
+                rec_div.appendChild(img)
+                rec_div.appendChild(title)
+                
+                a.appendChild(rec_div)
+
+                recs.appendChild(a);
+            })
+        }
+    </script>
+    <style>
+        body
+        {
+            top : 0 ;
+            left : 0 ;
+        }
+        .header
+        {
+            background-color:#047aed;
+            color:white;
+            text-align: center;
+            font-size: 2.25rem;
+            padding-top:5px;
+            padding-bottom:10px;
+            height:fit-content;
+        }
+        .image-card:hover{
+            transform:scale(0.98);
+            transition: 500ms;
+            box-shadow: 0 0 5px rgba(0,0,0,0.3);
+            background-color: rgba(0,0,0,0.1);
+        }
+        #title
+        {
+            padding-bottom:1px;
+            border-bottom: 3px solid white;
+        }
+
+
+        .form-container
+        {
+            background-color:#047aed;
+            height:fit-content;
+            text-align:center;
+            padding:30px;
+        }
+        .form-card
+        {
+            background-color: white;
+            width:fit-content;
+            height:fit-content;
+            margin:auto;
+            box-shadow:5px 7px rgba(0,0,0,0.3);
+            padding:30px;
+            border-radius: 5px;
+            z-index:100;
+        }
+        
+        input[type="text"], input[type="number"]
+        {
+            border:0;
+            border-bottom:1px solid #b4becb;
+            width:100%;
+            padding:3px;
+            font-size:16px;
+            margin-top:5px;
+            margin-bottom: 5px;
+        }
+
+        input:focus
+        {
+            outline:none;
+        }
+
+        .label
+        {
+            margin-top:10px;
+            margin-bottom:0;
+        }
+        .radio-label
+        {
+            margin-left:15px;
+        }
+        .btn:hover
+        {
+            transform : scale(0.98);
+        }
+
+        img{
+            margin-bottom:5px;
+        }
+
+        .image-container
+        {
+            margin-bottom : 10px;
+        }
+        #recommendation
+        {
+            text-align: center;
+            margin:auto;
+            padding:auto;
+            width:100%;
+            display: {{ display_rec }};
+        }
+        /* .contextual
+        {
+            display:None;
+        } */
+        
+        .switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 24px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(16px);
+  -ms-transform: translateX(16px);
+  transform: translateX(16px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+
+    </style>
+    </head>
+<body>
+    <div class="header">
+        <span id="title">Contextual Recommendation System</span>
+    </div>
+
+    <div class ="form-container">
+        <div class="form-card">
+            <form action="" method="POST" class="form">{% csrf_token %}
+                <fieldset name="choice">
+                    <label class="label">Would You like to get Contextual Recommendation?</label>
+                    <br>
+                    <input class="radio-label" type="radio" name="choice" value="Yes"  required> Yes
+                    <input class="radio-label" type="radio" name="choice" value="No" required> No
+                </fieldset>  
+                <input type="text" name="movie" required placeholder="Enter a Movie You like">
+                <br>
+                <input type="number" name="user_Id" required placeholder="Enter you UserID">
+                <input class="contextual" type="number" name="number_of_people" required placeholder="Number of People Watching the Movie-:">
+                
+                    <label class="contextual" style="margin-top:20px;">Watching with your family?
+                        <label class="switch">
+                        <input type="checkbox" name="family[]" style="margin-left:10px" value="Yes">
+                        <span class="slider round"></span>
+                        </label>
+                    </label>
+
+                <fieldset name="device-type" class="contextual">
+                    <label class="label">Choose the Type of Device-:</label><br>
+                    <input class="radio-label" type="radio" name="device-type" value="Mobile" required> Mobile
+                    <input class="radio-label" type="radio" name="device-type" value="Tablet">  Tablet
+                    <input class="radio-label" type="radio" name="device-type" value="TV/Laptop"> TV/Laptop
+                </fieldset>
+                <fieldset name="mood" class="contextual">
+                    <label class="label">Choose Your mood-:</label><br>
+                    <input class="radio-label" type="radio" name="mood" value="happy" required> Happy
+                    <input class="radio-label" type="radio" name="mood" value="neutral" neutral> Neutral
+                    <input class="radio-label" type="radio" name="mood" value="sad"> Sad
+                </fieldset>
+                <div>
+                <input type="number" name="day" required placeholder="Enter Day" style="width:30%; float:left; margin-right:20px;">
+                <input type="number" name="month" required placeholder="Enter Month" style="width:30%; float:left; margin-right:20px;">
+                <input type="number" name="year" required placeholder="Enter Year" style="width:30%; float:left">
+                </div>
+                <input style="margin-top:10px;" type="submit" value="Submit" class="btn-btn btn btn-primary">
+            </form>
+        </div>
+    </div>
+    <div id="recommendation" class="fluid-container img-responsive">
+        {% if movies_id %}
+            {% for mov in movies_id %}
+                <script>add_movie({{ mov }});</script>
+                <script>setInterval(function(){},1000);</script>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+
+    <!-- <script>
+        y = document.getElementsByClassName('contextual');
+        console.log(y.length);
+        for(i=0;i<y.length;i++)
+        {
+            console.log(y[i])
+            console.log("Hello")
+        }
+        
+        document.querySelectorAll('input[name="choice"]').forEach(elem => {
+        elem.addEventListener('change', function(event){
+            console.log(event.target.value);
+            x = event.target.value;
+            if ( x=="Yes")
+            {   
+                y.style.display = "Block";
+            }
+            else{
+                y.style.display = "None";
+            }
+            });
+        }); -->
+    </script>
+    </body>
+</html>
